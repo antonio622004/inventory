@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  sqliteweb:
+    image: coleifer/sqlite-web:latest
+    container_name: sqliteweb
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../inventory.db:/data/inventory.db
+    environment:
+      - SQLITE_DATABASE=/data/inventory.db
