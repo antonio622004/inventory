@@ -22,6 +22,8 @@ message ReserveItemsRequest {
 }
 
 message ReserveItemsResponse {
+    bool success = 1;
+    string message = 2;
 }
 
 message Item {

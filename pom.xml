@@ -15,6 +15,7 @@
     <grpc.version>1.76.0</grpc.version>
     <protobuf.version>4.31.1</protobuf.version>
     <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+    <os.plugin.version>1.7.1</os.plugin.version>
     <exec.plugin.version>3.1.0</exec.plugin.version>
     <maven.clean.plugin.version>3.3.2</maven.clean.plugin.version>
     <maven.compiler.source>17</maven.compiler.source>
@@ -76,6 +77,13 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>${os.plugin.version}</version>
+      </extension>
+    </extensions>
     <plugins>
       <!-- 🔹 Maven Compiler Plugin -->
       <plugin>
@@ -113,9 +121,9 @@
         <artifactId>protobuf-maven-plugin</artifactId>
         <version>${protobuf.plugin.version}</version>
         <configuration>
-          <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:windows-x86_64</protocArtifact>
+          <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
           <pluginId>grpc-java</pluginId>
-          <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:windows-x86_64</pluginArtifact>
+          <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
           <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
           <temporaryProtoFileDirectory>${project.build.directory}/protoc-temp</temporaryProtoFileDirectory>
           <checkStaleness>true</checkStaleness>

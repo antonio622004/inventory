@@ -2240,6 +2240,24 @@ public final class Inventory {
   public interface ReserveItemsResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:inventory.ReserveItemsResponse)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>bool success = 1;</code>
+     * @return The success.
+     */
+    boolean getSuccess();
+
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    java.lang.String getMessage();
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    com.google.protobuf.ByteString
+        getMessageBytes();
   }
   /**
    * Protobuf type {@code inventory.ReserveItemsResponse}
@@ -2263,6 +2281,7 @@ public final class Inventory {
       super(builder);
     }
     private ReserveItemsResponse() {
+      message_ = "";
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -2276,6 +2295,56 @@ public final class Inventory {
       return inventory.Inventory.internal_static_inventory_ReserveItemsResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               inventory.Inventory.ReserveItemsResponse.class, inventory.Inventory.ReserveItemsResponse.Builder.class);
+    }
+
+    public static final int SUCCESS_FIELD_NUMBER = 1;
+    private boolean success_ = false;
+    /**
+     * <code>bool success = 1;</code>
+     * @return The success.
+     */
+    @java.lang.Override
+    public boolean getSuccess() {
+      return success_;
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object message_ = "";
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    @java.lang.Override
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        message_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2292,6 +2361,12 @@ public final class Inventory {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (success_ != false) {
+        output.writeBool(1, success_);
+      }
+      if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, message_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2301,6 +2376,13 @@ public final class Inventory {
       if (size != -1) return size;
 
       size = 0;
+      if (success_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, success_);
+      }
+      if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, message_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2316,6 +2398,10 @@ public final class Inventory {
       }
       inventory.Inventory.ReserveItemsResponse other = (inventory.Inventory.ReserveItemsResponse) obj;
 
+      if (getSuccess()
+          != other.getSuccess()) return false;
+      if (!getMessage()
+          .equals(other.getMessage())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -2327,6 +2413,11 @@ public final class Inventory {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getSuccess());
+      hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getMessage().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2457,6 +2548,9 @@ public final class Inventory {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
+        success_ = false;
+        message_ = "";
         return this;
       }
 
@@ -2483,8 +2577,19 @@ public final class Inventory {
       @java.lang.Override
       public inventory.Inventory.ReserveItemsResponse buildPartial() {
         inventory.Inventory.ReserveItemsResponse result = new inventory.Inventory.ReserveItemsResponse(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
         onBuilt();
         return result;
+      }
+
+      private void buildPartial0(inventory.Inventory.ReserveItemsResponse result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.success_ = success_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.message_ = message_;
+        }
       }
 
       @java.lang.Override
@@ -2499,6 +2604,14 @@ public final class Inventory {
 
       public Builder mergeFrom(inventory.Inventory.ReserveItemsResponse other) {
         if (other == inventory.Inventory.ReserveItemsResponse.getDefaultInstance()) return this;
+        if (other.getSuccess() != false) {
+          setSuccess(other.getSuccess());
+        }
+        if (!other.getMessage().isEmpty()) {
+          message_ = other.message_;
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -2525,6 +2638,16 @@ public final class Inventory {
               case 0:
                 done = true;
                 break;
+              case 8: {
+                success_ = input.readBool();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 8
+              case 18: {
+                message_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -2538,6 +2661,111 @@ public final class Inventory {
         } finally {
           onChanged();
         } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private boolean success_ ;
+      /**
+       * <code>bool success = 1;</code>
+       * @return The success.
+       */
+      @java.lang.Override
+      public boolean getSuccess() {
+        return success_;
+      }
+      /**
+       * <code>bool success = 1;</code>
+       * @param value The success to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSuccess(boolean value) {
+
+        success_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool success = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object message_ = "";
+      /**
+       * <code>string message = 2;</code>
+       * @return The message.
+       */
+      public java.lang.String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          message_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return The bytes for message.
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        java.lang.Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessage(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        message_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessage() {
+        message_ = getDefaultInstance().getMessage();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The bytes for message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        message_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
         return this;
       }
 
@@ -3213,14 +3441,15 @@ public final class Inventory {
       "ory.Item\".\n\031CheckAvailabilityResponse\022\021\n" +
       "\tavailable\030\001 \001(\010\"\\\n\023ReserveItemsRequest\022" +
       "\020\n\010order_id\030\001 \001(\t\022\023\n\013customer_id\030\002 \001(\t\022\036" +
-      "\n\005items\030\003 \003(\0132\017.inventory.Item\"\026\n\024Reserv" +
-      "eItemsResponse\",\n\004Item\022\022\n\nproduct_id\030\001 \001" +
-      "(\t\022\020\n\010quantity\030\002 \001(\0052\303\001\n\020InventoryServic" +
-      "e\022^\n\021CheckAvailability\022#.inventory.Check" +
-      "AvailabilityRequest\032$.inventory.CheckAva" +
-      "ilabilityResponse\022O\n\014ReserveItems\022\036.inve" +
-      "ntory.ReserveItemsRequest\032\037.inventory.Re" +
-      "serveItemsResponseb\006proto3"
+      "\n\005items\030\003 \003(\0132\017.inventory.Item\"8\n\024Reserv" +
+      "eItemsResponse\022\017\n\007success\030\001 \001(\010\022\017\n\007messa" +
+      "ge\030\002 \001(\t\",\n\004Item\022\022\n\nproduct_id\030\001 \001(\t\022\020\n\010" +
+      "quantity\030\002 \001(\0052\303\001\n\020InventoryService\022^\n\021C" +
+      "heckAvailability\022#.inventory.CheckAvaila" +
+      "bilityRequest\032$.inventory.CheckAvailabil" +
+      "ityResponse\022O\n\014ReserveItems\022\036.inventory." +
+      "ReserveItemsRequest\032\037.inventory.ReserveI" +
+      "temsResponseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3249,7 +3478,7 @@ public final class Inventory {
     internal_static_inventory_ReserveItemsResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_inventory_ReserveItemsResponse_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[] { "Success", "Message", });
     internal_static_inventory_Item_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_inventory_Item_fieldAccessorTable = new

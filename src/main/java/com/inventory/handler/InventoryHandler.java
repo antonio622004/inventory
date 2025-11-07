@@ -44,15 +44,27 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
                 request.getOrderId(),
                 request.getCustomerId());
 
-        request.getItemsList().forEach(item -> service.reserveItems(
-                request.getOrderId(),
-                request.getCustomerId(),
-                item.getProductId(),
-                item.getQuantity()
-        ));
+        try {
+            request.getItemsList().forEach(item -> service.reserveItems(
+                    request.getOrderId(),
+                    request.getCustomerId(),
+                    item.getProductId(),
+                    item.getQuantity()
+            ));
 
-        logger.info("Items reserved: orderId={}", request.getOrderId());
-        responseObserver.onNext(Inventory.ReserveItemsResponse.newBuilder().build());
-        responseObserver.onCompleted();
+            logger.info("Items reserved: orderId={}", request.getOrderId());
+            Inventory.ReserveItemsResponse resp = Inventory.ReserveItemsResponse.newBuilder()
+                    .setSuccess(true)
+                    .setMessage(String.format("Items reserved for orderId=%s", request.getOrderId()))
+                    .build();
+            responseObserver.onNext(resp);
+            responseObserver.onCompleted();
+        } catch (Exception ex) {
+            logger.error("Failed to reserve items for orderId={}", request.getOrderId(), ex);
+            responseObserver.onError(io.grpc.Status.INTERNAL
+                    .withDescription("Failed to reserve items")
+                    .withCause(ex)
+                    .asRuntimeException());
+        }
     }
 }
