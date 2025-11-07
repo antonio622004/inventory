@@ -51,4 +51,61 @@ public void postReservation(String orderId, String customerId, String productId,
             logger.log(Level.SEVERE, "Failed to update inventory: productId=" + productId, e);
         }
     }
+
+    public boolean releaseReservation(String orderId) {
+        String selectSql = "SELECT product_id, quantity FROM reserved_inventory WHERE order_id = ?";
+        java.util.List<java.util.Map.Entry<String, Integer>> items = new java.util.ArrayList<>();
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql)) {
+            selectStmt.setString(1, orderId);
+            ResultSet rs = selectStmt.executeQuery();
+            while (rs.next()) {
+                items.add(new java.util.AbstractMap.SimpleEntry<>(
+                        rs.getString("product_id"),
+                        rs.getInt("quantity")
+                ));
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to load reservation for release: orderId=" + orderId, e);
+            return false;
+        }
+
+        if (items.isEmpty()) {
+            logger.info("No reservations found to release for orderId=" + orderId);
+            return false;
+        }
+
+        boolean autoCommit = true;
+        try {
+            autoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+
+            String updateSql = "UPDATE inventory SET quantity = quantity + ? WHERE product_id = ?";
+            try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                for (java.util.Map.Entry<String, Integer> item : items) {
+                    updateStmt.setInt(1, item.getValue());
+                    updateStmt.setString(2, item.getKey());
+                    updateStmt.addBatch();
+                }
+                updateStmt.executeBatch();
+            }
+
+            String deleteSql = "DELETE FROM reserved_inventory WHERE order_id = ?";
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql)) {
+                deleteStmt.setString(1, orderId);
+                deleteStmt.executeUpdate();
+            }
+
+            connection.commit();
+            logger.info("Released reservation for orderId=" + orderId);
+            return true;
+        } catch (SQLException e) {
+            try { connection.rollback(); } catch (SQLException rollbackEx) {
+                logger.log(Level.SEVERE, "Rollback failed while releasing reservation: orderId=" + orderId, rollbackEx);
+            }
+            logger.log(Level.SEVERE, "Failed to release reservation: orderId=" + orderId, e);
+            return false;
+        } finally {
+            try { connection.setAutoCommit(autoCommit); } catch (SQLException ignored) {}
+        }
+    }
 }

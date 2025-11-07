@@ -67,4 +67,18 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
                     .asRuntimeException());
         }
     }
+
+    @Override
+    public void releaseReservation(Inventory.ReleaseReservationRequest request,
+                                   StreamObserver<Inventory.ReleaseReservationResponse> responseObserver) {
+        String orderId = request.getOrderId();
+        logger.info("Releasing reservation for orderId={}", orderId);
+        boolean released = service.releaseReservation(orderId);
+        Inventory.ReleaseReservationResponse response = Inventory.ReleaseReservationResponse.newBuilder()
+                .setSuccess(released)
+                .setMessage(released ? "Reservation released" : "No reservation found")
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

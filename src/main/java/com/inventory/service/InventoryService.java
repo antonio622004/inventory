@@ -25,4 +25,8 @@ public class InventoryService {
     public void reserveItems(String orderId, String customerId, String productId, int quantity) {
         repository.postReservation(orderId, customerId, productId, quantity);
     }
+
+    public boolean releaseReservation(String orderId) {
+        return repository.releaseReservation(orderId);
+    }
 }
