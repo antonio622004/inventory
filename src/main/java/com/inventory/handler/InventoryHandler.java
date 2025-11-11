@@ -15,6 +15,7 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
     private static final Logger logger = LoggerFactory.getLogger(InventoryHandler.class);
     private final InventoryService service;
 
+
     public InventoryHandler(Database db) {
         this.service = new InventoryService(new InventoryRepository(db.getConnection()));
     }
@@ -22,7 +23,9 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
     @Override
     public void checkAvailability(Inventory.CheckAvailabilityRequest request,
                                   StreamObserver<Inventory.CheckAvailabilityResponse> responseObserver) {
-        logger.info("Received availability check for {} items", request.getItemsCount());
+        String msgIn = "Received availability check for itemsCount= " + request.getItemsCount();
+        logger.info(msgIn);
+        service.publishLog(msgIn);
 
         boolean available = service.checkAvailability(request.getItemsList());
 
@@ -30,7 +33,9 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
                 .setAvailable(available)
                 .build();
 
-        logger.info("Availability result: {}", available);
+        String msgOut = "Availability result= " + available;
+        logger.info(msgOut);
+        service.publishLog(msgOut);
         responseObserver.onNext(resp);
         responseObserver.onCompleted();
     }
@@ -39,10 +44,11 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
     public void reserveItems(Inventory.ReserveItemsRequest request,
                              StreamObserver<Inventory.ReserveItemsResponse> responseObserver) {
 
-        logger.info("Reserving {} items for orderId={}, customerId={}",
-                request.getItemsCount(),
-                request.getOrderId(),
-                request.getCustomerId());
+        String msgIn = "Reserving itemsCount= " + request.getItemsCount()
+        + " orderId= " + request.getOrderId()
+        + " customerId= " + request.getCustomerId();
+        logger.info(msgIn);
+        service.publishLog(msgIn);
 
         try {
             request.getItemsList().forEach(item -> service.reserveItems(
@@ -52,7 +58,9 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
                     item.getQuantity()
             ));
 
-            logger.info("Items reserved: orderId={}", request.getOrderId());
+            String msgOut = "Items reserved: orderId= " + request.getOrderId();
+                logger.info(msgOut);
+                service.publishLog(msgOut);
             Inventory.ReserveItemsResponse resp = Inventory.ReserveItemsResponse.newBuilder()
                     .setSuccess(true)
                     .setMessage(String.format("Items reserved for orderId=%s", request.getOrderId()))
@@ -60,7 +68,10 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
             responseObserver.onNext(resp);
             responseObserver.onCompleted();
         } catch (Exception ex) {
-            logger.error("Failed to reserve items for orderId={}", request.getOrderId(), ex);
+            String msgErr = "Failed to reserve items for orderId= " + request.getOrderId()
+                + " error= " + ex.getMessage();
+                logger.error(msgErr, ex);
+                service.publishLog(msgErr);
             responseObserver.onError(io.grpc.Status.INTERNAL
                     .withDescription("Failed to reserve items")
                     .withCause(ex)
@@ -72,7 +83,9 @@ public class InventoryHandler extends InventoryServiceGrpc.InventoryServiceImplB
     public void releaseReservation(Inventory.ReleaseReservationRequest request,
                                    StreamObserver<Inventory.ReleaseReservationResponse> responseObserver) {
         String orderId = request.getOrderId();
-        logger.info("Releasing reservation for orderId={}", orderId);
+        String msgOut = "Releasing reservation for orderId= " + orderId;
+        logger.info(msgOut);
+        service.publishLog(msgOut);
         boolean released = service.releaseReservation(orderId);
         Inventory.ReleaseReservationResponse response = Inventory.ReleaseReservationResponse.newBuilder()
                 .setSuccess(released)
