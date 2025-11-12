@@ -1,22 +1,35 @@
 package com.inventory;
 
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.amqp.core.Queue;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
 
-import com.inventory.db.Database;
 import com.inventory.handler.InventoryHandler;
 
+@SpringBootApplication
 public class App {
+
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
-    public static void main(String[] args) throws Exception {
-        Database db = new Database();
+    @Bean
+    public Queue logQueue() {
+        return new Queue("log.queue", true);
+    }
 
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    @Bean
+    public Server grpcServer(InventoryHandler handler) throws Exception {
         int port = 50051;
-        Server server = ServerBuilder.forPort(port)
-                .addService(new InventoryHandler(db))
+        Server server = io.grpc.ServerBuilder.forPort(port)
+                .addService(handler)
                 .build()
                 .start();
 
@@ -25,9 +38,15 @@ public class App {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.warn("Shutting down gRPC server...");
             server.shutdown();
-            try { db.close(); } catch (Exception e) { e.printStackTrace(); }
         }));
 
-        server.awaitTermination();
+        return server;
+    }
+
+    @Bean
+    public ApplicationRunner serverRunner(Server server) {
+        return args -> {
+            server.awaitTermination();
+        };
     }
 }

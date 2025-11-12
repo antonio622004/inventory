@@ -16,7 +16,6 @@
   <packaging>jar</packaging>
   <name>inventory</name>
 
-  <!-- 🔹 zentrale Properties -->
   <properties>
     <grpc.version>1.76.0</grpc.version>
     <protobuf.version>4.31.1</protobuf.version>
@@ -87,9 +86,9 @@
       <version>3.41.2.1</version>
     </dependency>
     <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+      </dependency>
   </dependencies>
 
   <build>

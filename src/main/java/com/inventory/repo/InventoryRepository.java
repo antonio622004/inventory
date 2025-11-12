@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Repository;
+@Repository
 public class InventoryRepository {
 
     private static final Logger logger = Logger.getLogger(InventoryRepository.class.getName());
@@ -29,26 +31,27 @@ public class InventoryRepository {
     }
 
 public void postReservation(String orderId, String customerId, String productId, int quantity) {
-        String insertSql = "INSERT INTO reserved_inventory (order_id, customer_id, product_id, quantity) VALUES (?, ?, ?, ?)";
+        
+    String insertSql = "INSERT INTO reserved_inventory (order_id, customer_id, product_id, quantity) VALUES (?, ?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             insertStmt.setString(1, orderId);
             insertStmt.setString(2, customerId);
             insertStmt.setString(3, productId);
             insertStmt.setInt(4, quantity);
             insertStmt.executeUpdate();
-            logger.info("Inserted reservation: orderId=" + orderId + ", productId=" + productId + ", quantity=" + quantity);
+            logger.info("Inserted reservation: orderId= " + orderId + ", productId= " + productId + ", quantity= " + quantity);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Failed to insert reservation: orderId=" + orderId + ", productId=" + productId, e);
+            logger.log(Level.SEVERE, "Failed to insert reservation: orderId= " + orderId + ", productId= " + productId, e);
         }
 
-        String updateSql = "UPDATE inventory SET quantity = quantity - ? WHERE product_id = ?";
+    String updateSql = "UPDATE inventory SET quantity = quantity - ? WHERE product_id = ?";
         try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
             updateStmt.setInt(1, quantity);
             updateStmt.setString(2, productId);
             updateStmt.executeUpdate();
             logger.info("Updated inventory: productId=" + productId + ", decremented by " + quantity);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Failed to update inventory: productId=" + productId, e);
+            logger.log(Level.SEVERE, "Failed to update inventory: productId= " + productId, e);
         }
     }
 

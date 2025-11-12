@@ -3,18 +3,18 @@ package com.inventory.service;
 import inventory.Inventory.Item;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.inventory.publisher.IsPublisher;
 import com.inventory.repo.InventoryRepository;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
+@Service
 public class InventoryService {
     private final InventoryRepository repository;
     private final IsPublisher publisher;
 
-    public InventoryService(InventoryRepository repository) {
+    public InventoryService(InventoryRepository repository, IsPublisher publisher) {
         this.repository = repository;
-        this.publisher = msg -> {};
+        this.publisher = publisher;
     }
 
     public boolean checkAvailability(List<Item> items) {
@@ -35,7 +35,7 @@ public class InventoryService {
         return repository.releaseReservation(orderId);
     }
 
-    public void publishLog(String message) {
-    publisher.publish(message);
-  }
+    public void sendLog(String pattern, Object... args) {
+        publisher.publishLog(pattern, args);
+    }
 }
